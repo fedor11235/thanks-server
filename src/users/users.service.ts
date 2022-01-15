@@ -1,22 +1,30 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserEntity } from './user.entity';
+import { User } from './user.entity';
 
 import { CreateUserDto } from './user.dto';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(UserEntity)
-    private usersRepository: Repository<UserEntity>,
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
   ) {}
 
-  findAll(): Promise<UserEntity[]> {
+  findAll(): Promise<User[]> {
     return this.usersRepository.find();
   }
 
-  create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto) {
+
+    const resultOrden = await this.usersRepository.findOne({order: {uid: 'DESC'}, select:['uid']});
+    // console.log(resultOrden)
+
+    if(!resultOrden) {createUserDto.uid = createUserDto.idRecipient + '#000001'}
+    else {
+      createUserDto.uid = createUserDto.idRecipient + '#' + String(Number(resultOrden.uid.replace(/\S+#0*/, ''))+1).padStart(6,"0");
+    }
     this.usersRepository.save(createUserDto);
   }
 

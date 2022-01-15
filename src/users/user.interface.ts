@@ -1,6 +1,6 @@
 export interface Userinterface {
     uid: string;
     id: string;
-    recipient: string;
+    idRecipient: string;
     reason: string;
 }
