@@ -1,13 +1,13 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm';
 
 @Entity()
-export class User {
+export class UserEntity {
 
     @PrimaryColumn()
     uid: string;
 
     @Column({ type: "varchar", length: 16 })
-    id: number;
+    id: string;
 
     @Column({ type: "varchar", length: 16, nullable: true })
     recipient: string;

@@ -1,6 +1,6 @@
 export  class CreateUserDto {
     uid: string;
-    id: number;
+    id: string;
     recipient: string;
     reason: string;
 }

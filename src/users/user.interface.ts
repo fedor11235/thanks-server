@@ -1,6 +1,6 @@
-export interface User {
+export interface Userinterface {
     uid: string;
-    id: number;
+    id: string;
     recipient: string;
     reason: string;
 }

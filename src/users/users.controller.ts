@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { User } from './user.interface';
+import { Userinterface } from './user.interface';
 import { CreateUserDto } from './user.dto';
 
 @Controller()
@@ -9,7 +9,7 @@ export class UsersController {
     constructor(private readonly usersService: UsersService) { }
 
     @Get('list')
-    async findAll(): Promise<User[]> {
+    async findAll(): Promise<Userinterface[]> {
         return this.usersService.findAll();
     }
 
