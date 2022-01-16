@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { Repository, In } from 'typeorm'
 import { User } from './user.entity'
 
 import { CreateUserDto } from './dto/user.create.dto'
@@ -12,9 +12,13 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async findAll(query: Record<string, any>): Promise<User[]> {
+  async findAll(query: Record<string, any>): Promise<any> {
     console.log(query)
-    return this.usersRepository.find({to:query.id})
+
+    const resultQuery = await this.usersRepository.find({to:query.id})
+    const responseArr = {total:resultQuery.length, nextCursor: 'oeufgwneiucgo2bitroibuwqnvqvowiytnqvoerym', items:resultQuery}
+
+    return responseArr
   }
 
   async create(createUserDto: CreateUserDto) {
