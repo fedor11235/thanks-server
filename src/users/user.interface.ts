@@ -1,6 +1,6 @@
 export interface Userinterface {
-    uid: string;
-    id: string;
-    idRecipient: string;
-    reason: string;
+    id: string
+    from: string
+    to: string
+    reason: string
 }

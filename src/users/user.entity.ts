@@ -1,18 +1,23 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn } from 'typeorm'
+import { ApiProperty } from '@nestjs/swagger'
 
 @Entity()
 export class User {
 
+    @ApiProperty()
     @PrimaryColumn()
-    uid: string;
+    id: string
 
+    @ApiProperty()
     @Column({ type: "varchar", length: 16, nullable: true  })
-    id: string;
+    from: string
 
+    @ApiProperty()
     @Column({ type: "varchar", length: 16 })
-    idRecipient: string;
+    to: string
 
-    @Column()
-    reason: string;
+    @ApiProperty()
+    @Column({ type: "varchar", nullable: true  })
+    reason: string
 
 }
