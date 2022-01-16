@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { User } from './user.entity'
 
-import { CreateUserDto } from './user.dto'
+import { CreateUserDto } from './dto/user.create.dto'
 
 @Injectable()
 export class UsersService {
@@ -24,7 +24,7 @@ export class UsersService {
     else {
       createUserDto.id = createUserDto.to + '#' + String(Number(resultOrden.id.replace(/\S+#0*/, ''))+1).padStart(6,"0")
     }
-    this.usersRepository.save(createUserDto)
+    return this.usersRepository.save(createUserDto)
   }
 
 }
