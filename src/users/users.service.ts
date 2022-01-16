@@ -12,13 +12,14 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  findAll(): Promise<User[]> {
-    return this.usersRepository.find()
+  async findAll(query: Record<string, any>): Promise<User[]> {
+    console.log(query)
+    return this.usersRepository.find({to:query.id})
   }
 
   async create(createUserDto: CreateUserDto) {
 
-    const resultOrden = await this.usersRepository.findOne({order: {id: 'DESC'}, select:['id']})
+    const resultOrden = await this.usersRepository.findOne({to:createUserDto.to}, {order: {id: 'DESC'}, select:['id']})
 
     if(!resultOrden) {createUserDto.id = createUserDto.to + '#000001'}
     else {

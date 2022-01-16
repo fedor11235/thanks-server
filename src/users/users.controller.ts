@@ -1,14 +1,14 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common'
+import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common'
 import { UsersService } from './users.service'
 import { Userinterface } from './user.interface'
-import { CreateUserDto } from './dto/user.create.dto'
 
+import { CreateUserDto } from './dto/user.create.dto'
 import { RequestUserDto } from './dto/user.request.dto'
 
 
-import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiBody, ApiResponse, ApiTags, ApiParam, ApiQuery } from '@nestjs/swagger'
 
-@ApiTags('User')
+@ApiTags('User Api')
 @Controller()
 export class UsersController {
 
@@ -20,9 +20,10 @@ export class UsersController {
         description:"All users on this page", 
         type:CreateUserDto
     })
-    async findAll(@Param('id') id:string): Promise<void> {
-        console.log(`${id}`)
-        // return this.usersService.findAll()
+    @ApiQuery({name: 'id', required: true, description: 'recipient user id'})
+    @ApiQuery({name: 'perPage', required: true, description: 'number of entries'})
+    async findAll(@Query() query: Record<string, any>):Promise<Userinterface[]>{
+        return this.usersService.findAll(query)
     }
 
     @Post('add')
