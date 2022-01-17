@@ -21,8 +21,9 @@ export class UsersController {
         description:"All users on this page", 
         type:CreateUserDto
     })
-    @ApiQuery({name: 'id', required: true, description: 'recipient user id'})
-    @ApiQuery({name: 'perPage', required: true, description: 'number of entries'})
+    @ApiQuery({name: 'id', required: false, description: 'recipient user id'})
+    @ApiQuery({name: 'perPage', required: false, description: 'number of entries'})
+    @ApiQuery({name: 'cursor', required: false, description: 'cursor to the next page'})
     async findAll(@Query() query: Record<string, any>){
         return this.usersService.findAll(query)
     }

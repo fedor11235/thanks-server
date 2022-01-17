@@ -19,10 +19,11 @@ export class UsersService {
 
   async findAll(query: Record<string, any>) {
     let sortResult
-    const cursor = await this.cursorRepository.findOne({ id: query.id })
-    const checkUser = await this.usersRepository.findOne({ to: query.id })
+    const checkUsers = await this.usersRepository.findOne({ to: query.id })
+    const checkCursor = await this.cursorRepository.findOne({ cursor: query.cursor })
+
     let newNextCursor = this.createCursor(41)
-    if (!cursor && checkUser) {
+    if (!query.cursor && checkUsers) {
       const newCursor =
       {
         id: query.id,
@@ -35,8 +36,8 @@ export class UsersService {
       sortResult = resultQuery.reverse().slice(0, query.perPage)
     }
 
-    if (cursor && checkUser) {
-
+    else if (checkCursor) {
+      const cursor = await this.cursorRepository.findOne({ cursor: query.cursor })
       const resultQuery = await this.usersRepository.find({ to: cursor.id })
 
       sortResult = resultQuery.reverse().slice(
