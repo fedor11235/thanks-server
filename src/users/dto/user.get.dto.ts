@@ -1,14 +1,12 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { CreateUserDto } from './user.create.dto'
+import { ApiProperty } from '@nestjs/swagger';
 
-export  class GetUserDto {
-    
-    @ApiProperty()
-    total: Number
+export class GetUserDto {
+  @ApiProperty()
+  total: number;
 
-    @ApiProperty()
-    nextCursor: String
+  @ApiProperty()
+  nextCursor: string;
 
-    @ApiProperty()
-    items: CreateUserDto[]
+  @ApiProperty()
+  items: Array<any>;
 }

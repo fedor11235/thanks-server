@@ -6,12 +6,5 @@
     "password": "57Felasi",
     "database": "users",
     "entities": ["dist/**/*.entity{.ts,.js}"],
-    "synchronize": true,
-
-    "migrationsRun": false,
-    "logging": true,
-    "migrations": ["dist/db/migrations/*{.ts,.js}"],
-    "cli": {
-      "migrationsDir": "db/migrations"
-    }
+    "synchronize": true
   }

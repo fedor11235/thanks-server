@@ -1,16 +1,15 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty } from '@nestjs/swagger';
 
-export  class CreateUserDto {
-    
-    @ApiProperty({required:false})
-    id?: String
+export class CreateUserDto {
+  @ApiProperty({ required: false })
+  id?: string;
 
-    @ApiProperty({required:false})
-    from?: String
+  @ApiProperty({ required: false })
+  from?: string;
 
-    @ApiProperty()
-    to: String
+  @ApiProperty()
+  to: string;
 
-    @ApiProperty({required:false})
-    reason?: String
+  @ApiProperty({ required: false })
+  reason?: string;
 }
