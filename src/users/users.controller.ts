@@ -3,6 +3,7 @@ import { UsersService } from './users.service'
 import { Userinterface } from './user.interface'
 
 import { CreateUserDto } from './dto/user.create.dto'
+import { GetUserDto } from './dto/user.get.dto'
 import { RequestUserDto } from './dto/user.request.dto'
 
 
@@ -22,7 +23,7 @@ export class UsersController {
     })
     @ApiQuery({name: 'id', required: true, description: 'recipient user id'})
     @ApiQuery({name: 'perPage', required: true, description: 'number of entries'})
-    async findAll(@Query() query: Record<string, any>):Promise<Userinterface[]>{
+    async findAll(@Query() query: Record<string, any>){
         return this.usersService.findAll(query)
     }
 

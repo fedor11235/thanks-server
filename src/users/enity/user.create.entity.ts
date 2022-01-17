@@ -6,18 +6,18 @@ export class User {
 
     @ApiProperty()
     @PrimaryColumn()
-    id: string
+    id: String
 
     @ApiProperty()
     @Column({ type: "varchar", length: 16, nullable: true  })
-    from: string
+    from: String
 
     @ApiProperty()
     @Column({ type: "varchar", length: 16 })
-    to: string
+    to: String
 
     @ApiProperty()
     @Column({ type: "varchar", nullable: true  })
-    reason: string
+    reason: String
 
 }

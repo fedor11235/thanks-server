@@ -2,14 +2,12 @@ import { ApiProperty } from '@nestjs/swagger'
 
 export  class RequestUserDto {
     
-
-
     @ApiProperty({required:false})
-    from: string
+    from?: String
 
     @ApiProperty()
-    to: string
+    to: String
 
     @ApiProperty({required:false})
-    reason: string
+    reason?: String
 }

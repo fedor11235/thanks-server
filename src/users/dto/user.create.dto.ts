@@ -3,14 +3,14 @@ import { ApiProperty } from '@nestjs/swagger'
 export  class CreateUserDto {
     
     @ApiProperty({required:false})
-    id: string
+    id?: String
 
     @ApiProperty({required:false})
-    from: string
+    from?: String
 
     @ApiProperty()
-    to: string
+    to: String
 
     @ApiProperty({required:false})
-    reason: string
+    reason?: String
 }
