@@ -5,17 +5,17 @@ import { ApiProperty } from '@nestjs/swagger';
 export class User {
   @ApiProperty()
   @PrimaryColumn()
-  id: String;
+  id: string;
 
   @ApiProperty()
   @Column({ type: 'varchar', length: 16, nullable: true })
-  from: String;
+  from: string;
 
   @ApiProperty()
   @Column({ type: 'varchar', length: 16 })
-  to: String;
+  to: string;
 
   @ApiProperty()
   @Column({ type: 'varchar', nullable: true })
-  reason: String;
+  reason: string;
 }

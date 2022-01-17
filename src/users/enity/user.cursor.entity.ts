@@ -6,17 +6,17 @@ import { RequestUserDto } from '../dto/user.request.dto';
 export class Cursor {
   @ApiProperty()
   @PrimaryColumn()
-  id: String;
+  id: string;
 
   @ApiProperty()
   @Column({ type: 'int' })
-  page: Number;
+  page: number;
 
   @ApiProperty()
   @Column({ type: 'int' })
-  perPage: Number;
+  perPage: number;
 
   @ApiProperty()
   @Column({ nullable: true })
-  cursor: String;
+  cursor: string;
 }

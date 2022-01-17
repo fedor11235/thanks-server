@@ -34,8 +34,11 @@ export class UsersService {
       this.cursorRepository.save(newCursor);
       const resultQuery = await this.usersRepository.find({ to: query.id });
       sortResult = resultQuery.reverse().slice(0, query.perPage);
-      if(sortResult[sortResult.length-1].id===resultQuery[resultQuery.length-1].id) newNextCursor = null;
-      
+      if (
+        sortResult[sortResult.length - 1].id ===
+        resultQuery[resultQuery.length - 1].id
+      )
+        newNextCursor = null;
     } else if (checkCursor) {
       const cursor = await this.cursorRepository.findOne({
         cursor: query.cursor,
@@ -48,16 +51,23 @@ export class UsersService {
           Number(cursor.perPage) * Number(cursor.page),
           Number(cursor.perPage) * Number(cursor.page) + Number(cursor.perPage),
         );
-      if(sortResult[sortResult.length-1].id===resultQuery[resultQuery.length-1].id) newNextCursor = null;
-      console.log(sortResult[sortResult.length-1].id, resultQuery[sortResult.length-1].id)
+      if (
+        sortResult[sortResult.length - 1].id ===
+        resultQuery[resultQuery.length - 1].id
+      )
+        newNextCursor = null;
+      console.log(
+        sortResult[sortResult.length - 1].id,
+        resultQuery[sortResult.length - 1].id,
+      );
 
       if (sortResult.length != 0) {
         cursor.cursor = newNextCursor;
         cursor.page = Number(cursor.page) + 1;
-      } 
+      }
 
       this.cursorRepository.save(cursor);
-    } 
+    }
 
     const responseArr = {
       total: sortResult.length,
@@ -92,7 +102,7 @@ export class UsersService {
     let result = '';
     const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
     const charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
+    for (let i = 0; i < length; i++) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
