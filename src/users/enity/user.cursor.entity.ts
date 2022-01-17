@@ -17,7 +17,7 @@ export class Cursor {
     perPage: Number
 
     @ApiProperty()
-    @Column()
+    @Column({ nullable: true})
     cursor: String
 
 }

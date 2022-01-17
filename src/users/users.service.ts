@@ -15,63 +15,85 @@ export class UsersService {
 
     @InjectRepository(Cursor)
     private cursorRepository: Repository<Cursor>,
-  ) {}
+  ) { }
 
-  async findAll(query: Record<string, any>){
+  async findAll(query: Record<string, any>) {
     let sortResult
-    const cursor = await this.cursorRepository.findOne({id:query.id})
-    if(!cursor) {
-      const newCursor = 
+    const cursor = await this.cursorRepository.findOne({ id: query.id })
+    const checkUser = await this.usersRepository.findOne({ to: query.id })
+    let newNextCursor = this.createCursor(41)
+    if (!cursor && checkUser) {
+      const newCursor =
       {
-        id: query.id, 
-        page: 1, 
+        id: query.id,
+        page: 1,
         perPage: query.perPage,
-        cursor: this.createCursor(41)
-      }  
+        cursor: newNextCursor
+      }
       this.cursorRepository.save(newCursor)
-      const resultQuery = await this.usersRepository.find({to:query.id})
+      const resultQuery = await this.usersRepository.find({ to: query.id })
       sortResult = resultQuery.reverse().slice(0, query.perPage)
     }
 
-    else {
+    if (cursor && checkUser) {
 
-      const resultQuery = await this.usersRepository.find({to:cursor.id})
+      const resultQuery = await this.usersRepository.find({ to: cursor.id })
+
       sortResult = resultQuery.reverse().slice(
-        Number(cursor.perPage)*Number(cursor.page), 
-        Number(cursor.perPage)*Number(cursor.page)+Number(cursor.perPage))
+        Number(cursor.perPage) * Number(cursor.page),
+        Number(cursor.perPage) * Number(cursor.page) + Number(cursor.perPage))
+
+      if (sortResult.length != 0) {
+        cursor.cursor = newNextCursor
+        cursor.page = Number(cursor.page) + 1
+
+      }
+      else {
+        newNextCursor = null
+        cursor.cursor = newNextCursor
+      }
+      this.cursorRepository.save(cursor)
+
+
+
+    }
+
+    else { 
+      sortResult = [] 
+      newNextCursor = null
     }
 
 
-    const responseArr = 
+    const responseArr =
     {
-      total:sortResult.length, 
-      nextCursor: this.createCursor(41), 
-      items:sortResult
+      total: sortResult.length,
+      nextCursor: newNextCursor,
+      items: sortResult
     }
- 
+
 
     return responseArr
   }
 
   async create(createUserDto: CreateUserDto) {
 
-    const resultOrden = await this.usersRepository.findOne({to:createUserDto.to}, {order: {id: 'DESC'}, select:['id']})
+    const resultOrden = await this.usersRepository.findOne({ to: createUserDto.to }, { order: { id: 'DESC' }, select: ['id'] })
 
-    if(!resultOrden) {createUserDto.id = createUserDto.to + '#000001'}
+    if (!resultOrden) { createUserDto.id = createUserDto.to + '#000001' }
     else {
-      createUserDto.id = createUserDto.to + '#' + String(Number(resultOrden.id.replace(/\S+#0*/, ''))+1).padStart(6,"0")
+      createUserDto.id = createUserDto.to + '#' + String(Number(resultOrden.id.replace(/\S+#0*/, '')) + 1).padStart(6, "0")
     }
     return this.usersRepository.save(createUserDto)
   }
 
   private createCursor(length): String {
-    let result           = '';
-    const characters       = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
     const charactersLength = characters.length;
-    for ( var i = 0; i < length; i++ ) {
-       result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result; //8htovc26sg2gzgs623mkrhozg5q4wkhszrehrqbc3
- }
+  }
 
 }
