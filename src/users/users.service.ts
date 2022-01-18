@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
-import { User } from './enity/user.create.entity';
-import { Cursor } from './enity/user.cursor.entity';
+import { User } from './user.create.entity';
 import { CreateUserDto } from './dto/user.create.dto';
 import { GetUserDto } from './dto/user.get.dto';
 
@@ -11,63 +10,43 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-
-    @InjectRepository(Cursor)
-    private cursorRepository: Repository<Cursor>,
   ) {}
+  private cursor = [];
 
   async listUser(query: Record<string, any>): Promise<GetUserDto> {
-    let sortResult;
-    const checkUsers = await this.usersRepository.findOne({ to: query.id });
-    const checkCursor = await this.cursorRepository.findOne({
-      cursor: query.cursor,
-    });
+    let sortResult = [];
+    const thankListUser = await this.usersRepository.find({ to: query.id });
 
+    const checkCursorFunction = obj => obj.NextCursor === query.cursor;
+    const checkCursor = this.cursor.some(checkCursorFunction)
+
+    
     let newNextCursor = this.createCursor(41);
-    if (!query.cursor && checkUsers) {
+    if (!query.cursor && thankListUser && query.perPage) {
+
+      sortResult = thankListUser.reverse().slice(0, query.perPage);
+      if (query.perPage == thankListUser.length) newNextCursor = null;
+
       const newCursor = {
         id: query.id,
-        page: 1,
-        perPage: query.perPage,
-        cursor: newNextCursor,
+        onAllPages: Number(query.perPage),
+        perPage: Number(query.perPage),
+        NextCursor: newNextCursor,
       };
-      this.cursorRepository.save(newCursor);
-      const resultQuery = await this.usersRepository.find({ to: query.id });
-      sortResult = resultQuery.reverse().slice(0, query.perPage);
-      if (
-        sortResult[sortResult.length - 1].id ===
-        resultQuery[resultQuery.length - 1].id
-      )
-        newNextCursor = null;
+      this.cursor.push(newCursor)
+
     } else if (checkCursor) {
-      const cursor = await this.cursorRepository.findOne({
-        cursor: query.cursor,
-      });
-      const resultQuery = await this.usersRepository.find({ to: cursor.id });
+      const userCursor = this.cursor.find(objCursor =>  objCursor.NextCursor===query.cursor);
+      const onAllPages = userCursor.onAllPages + userCursor.perPage
 
-      sortResult = resultQuery
-        .reverse()
-        .slice(
-          Number(cursor.perPage) * Number(cursor.page),
-          Number(cursor.perPage) * Number(cursor.page) + Number(cursor.perPage),
-        );
-      if (
-        sortResult[sortResult.length - 1].id ===
-        resultQuery[resultQuery.length - 1].id
-      )
-        newNextCursor = null;
-      console.log(
-        sortResult[sortResult.length - 1].id,
-        resultQuery[sortResult.length - 1].id,
-      );
+      sortResult = thankListUser.reverse().slice(userCursor.onAllPages, onAllPages);
 
+      if (onAllPages === thankListUser.length) newNextCursor = null;
       if (sortResult.length != 0) {
-        cursor.cursor = newNextCursor;
-        cursor.page = Number(cursor.page) + 1;
+        userCursor.NextCursor = newNextCursor;
+        userCursor.onAllPages = onAllPages;
       }
-
-      this.cursorRepository.save(cursor);
-    }
+    } else newNextCursor = null
 
     const responseArr = {
       total: sortResult.length,
